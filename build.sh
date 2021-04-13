@@ -3,6 +3,9 @@
 set -x
 set -e
 
+# to test this script locally run the following command to enable linux/arm64 builds with docker:
+# docker run --privileged --rm tonistiigi/binfmt --install all
+
 docker buildx build \
   --platform linux/arm64 \
   --load \
@@ -25,6 +28,6 @@ docker buildx build \
 mkdir -p artifacts
 
 # Extract compiled binaries
-docker run -it -v $PWD:/home --entrypoint "" concourse-arm-worker /bin/sh -c "tar -czf /home/artifacts/concourse_extracted.tar.gz /usr/local/concourse"
+docker run -v $PWD:/home --entrypoint "" concourse-arm-worker /bin/sh -c "tar -czf /home/artifacts/concourse_extracted.tar.gz /usr/local/concourse"
 
 ls -lh artifacts
