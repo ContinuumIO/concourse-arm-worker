@@ -3,6 +3,9 @@
 set -x
 set -e
 
+# to test this script locally run the following command to enable linux/arm64 builds with docker:
+# docker run --privileged --rm tonistiigi/binfmt --install all
+
 docker buildx build \
   --platform linux/arm64 \
   --load \
