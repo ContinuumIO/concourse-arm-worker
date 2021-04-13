@@ -28,6 +28,6 @@ docker buildx build \
 mkdir -p artifacts
 
 # Extract compiled binaries
-docker run -it -v $PWD:/home --entrypoint "" concourse-arm-worker /bin/sh -c "tar -czf /home/artifacts/concourse_extracted.tar.gz /usr/local/concourse"
+docker run -v $PWD:/home --entrypoint "" concourse-arm-worker /bin/sh -c "tar -czf /home/artifacts/concourse_extracted.tar.gz /usr/local/concourse"
 
 ls -lh artifacts
