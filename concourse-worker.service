@@ -8,6 +8,7 @@ After=network.target
 
 [Service]
 EnvironmentFile=/usr/local/concourse/etc/worker.conf
+PassEnvironment=CONCOURSE_WORK_DIR CONCOURSE_LOG_LEVEL CONCOURSE_TSA_HOST CONCOURSE_TSA_PUBLIC_KEY CONCOURSE_TSA_WORKER_PRIVATE_KEY
 ExecStart=/usr/local/concourse/bin/concourse worker
 KillMode=process
 LimitNPROC=infinity
@@ -16,9 +17,10 @@ TasksMax=infinity
 Delegate=yes
 Restart=on-failure
 RestartSec=3
-ExecStop=/bin/kill -USR2 $MAINPID ; /usr/bin/tail --pid $MAINPID -f /dev/null
+#ExecStop=/bin/kill -USR2 $MAINPID ; /usr/bin/tail --pid $MAINPID -f /dev/null
 TimeoutStopSec=300
-User=concourse
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target
