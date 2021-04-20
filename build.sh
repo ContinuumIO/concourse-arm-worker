@@ -28,6 +28,9 @@ docker buildx build \
 mkdir -p artifacts
 
 # Extract compiled binaries
-docker run -v $PWD:/home --entrypoint "" concourse-arm-worker /bin/sh -c "tar -czf /home/artifacts/concourse_extracted.tar.gz /usr/local/concourse"
+docker run -v $PWD:/home --entrypoint "" concourse-arm-worker /bin/sh -c " \
+  set -o errtrace -o pipefail -o errexit; \
+  cp /home/concourse-worker.service /etc/systemd/system/; \
+  tar -czf /home/artifacts/concourse_extracted.tar.gz /usr/local/concourse /etc/systemd/system/concourse-worker.service"
 
 ls -lh artifacts
