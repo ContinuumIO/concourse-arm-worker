@@ -1,0 +1,42 @@
+From 02830b4a17ea3e3d8eb6f64d14f42d3814593ee4 Mon Sep 17 00:00:00 2001
+From: "Cheng H. Lee" <clee@anaconda.com>
+Date: Sat, 6 Mar 2021 21:39:17 -0600
+Subject: [PATCH] Append arch to worker "platform" string for non-x86 systems
+
+Helpful when building out a multi-architecture cluster to prevent jobs
+from being accidentally sent to the wrong system; in principle, this
+could also be done using tags, but that would involve more extensive
+re-tooling of our CI/CD system.
+---
+ cmd/concourse/worker_linux.go | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/cmd/concourse/worker_linux.go b/cmd/concourse/worker_linux.go
+index 056f312f5..1295f35ce 100644
+--- a/cmd/concourse/worker_linux.go
++++ b/cmd/concourse/worker_linux.go
+@@ -9,9 +9,11 @@ import (
+ 	"os/exec"
+ 	"os/user"
+ 	"path/filepath"
++	"runtime"
+ 	"strings"
+ 	"syscall"
+ 
++
+ 	"code.cloudfoundry.org/lager"
+ 	"code.cloudfoundry.org/localip"
+ 	"github.com/concourse/concourse/atc"
+@@ -47,6 +49,9 @@ func (cmd *WorkerCommand) gardenRunner(logger lager.Logger) (atc.Worker, ifrit.R
+ 
+ 	worker := cmd.Worker.Worker()
+ 	worker.Platform = "linux"
++	if runtime.GOARCH != "amd64" {
++		worker.Platform += "-" + runtime.GOARCH
++	}
+ 
+ 	if cmd.Certs.Dir != "" {
+ 		worker.CertsPath = &cmd.Certs.Dir
+-- 
+2.31.1
+

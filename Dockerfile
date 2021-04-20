@@ -13,8 +13,10 @@ WORKDIR /go/guardian/cmd/init
 RUN gcc -static -o init init.c ignore_sigchild.c
 
 RUN git clone --branch $CONCOURSE_VERSION https://github.com/concourse/concourse /go/concourse
+COPY 0001-Append-arch-to-worker-platform-string-for-non-x86-sy.patch /go/concourse/
 WORKDIR /go/concourse
-RUN go build -ldflags "-extldflags '-static'" ./cmd/concourse
+RUN git apply 0001-Append-arch-to-worker-platform-string-for-non-x86-sy.patch && \
+    go build -ldflags "-extldflags '-static'" ./cmd/concourse
 
 RUN git clone --branch $CNI_PLUGINS_VERSION https://github.com/containernetworking/plugins.git /go/plugins
 WORKDIR /go/plugins
